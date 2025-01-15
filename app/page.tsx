@@ -1,19 +1,15 @@
-import Navbar from '../components/layout/header/navbar'
-import Footer from '../components/layout/footer'
-import HeroSection from '../components/sections/hero/hero-section'
-import CollectionsGrid from '../components/sections/collections'
-import Statistics from '../components/sections/statistics'
+import HeroSection from '../components/sections/hero';
+import StatsBar from '../components/sections/stats-bar';
+import CollectionShowcase from '../components/sections/collection-showcase';
+import NewArrivals from '../components/sections/new-arrivals';
 
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <main>
-        <HeroSection />
-        <Statistics />
-        <CollectionsGrid />
-      </main>
-      <Footer />
+      <HeroSection />
+      <StatsBar />
+      <CollectionShowcase />
+      <NewArrivals />
     </>
-  )
+  );
 }

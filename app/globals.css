@@ -2,64 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --dark-teal: #1A3635;
+  --gold: #C5A992;
+  --warm-cream: #F9F3EF;
+  --text-gray: #6B7280;
+}
+
 @layer base {
-  :root {
-    --background: #ffffff;
-    --foreground: #1A2B3B;
-  }
-
-  html {
-    font-family: var(--font-inter), system-ui, sans-serif;
-    scroll-behavior: smooth;
-  }
-
   body {
-    @apply text-text-primary bg-background;
-    font-size: 16px;
-    line-height: 24px;
+    @apply bg-white text-gray-900;
+    font-family: var(--font-inter);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
-  }
-
-  h1 {
-    @apply text-h1 font-medium;
-  }
-
-  h2 {
-    @apply text-h2 font-medium;
-  }
-
-  h3 {
-    @apply text-h3 font-medium;
-  }
-
-  p {
-    @apply text-body;
-  }
-
-  small {
-    @apply text-small;
+    font-family: var(--font-playfair);
   }
 }
 
 @layer components {
   .container {
-    @apply mx-auto px-4 md:px-6 max-w-7xl;
-  }
-
-  .grid-container {
-    @apply grid grid-cols-12 gap-default;
-  }
-
-  .section {
-    @apply py-10 md:py-20;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-gold {
+    color: var(--gold);
+  }
+
+  .bg-dark-teal {
+    background-color: var(--dark-teal);
+  }
+
+  .bg-warm-cream {
+    background-color: var(--warm-cream);
   }
 }

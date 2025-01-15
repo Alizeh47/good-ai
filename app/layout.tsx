@@ -1,34 +1,38 @@
-import './globals.css'
-import { Inter, Fraunces } from 'next/font/google'
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
+import { Inter, Playfair_Display } from 'next/font/google';
+import Header from '../components/layout/header';
+import Footer from '../components/layout/footer';
+import './globals.css';
 
-const inter = Inter({
+const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap',
   variable: '--font-inter',
-})
+});
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-freight',
-})
+  variable: '--font-playfair',
+});
 
 export const metadata: Metadata = {
-  title: 'Eglanto Jewelry',
-  description: 'Discover our exquisite collection of luxury jewelry pieces.',
-}
+  title: 'Eglanto - Luxury Jewelry',
+  description: 'Discover timeless elegance with our luxury jewelry collection.',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body>
-        {children}
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow pt-20">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
-  )
+  );
 }

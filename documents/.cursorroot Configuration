@@ -1,0 +1,203 @@
+{
+  "name": "eglanto-jewelry",
+  "root": ".",
+  "outPath": "dist",
+  "dockerPath": "Dockerfile",
+  "prebuild": "npm run lint",
+  "postbuild": "npm run test",
+  "skipFiles": [
+    "node_modules",
+    ".next",
+    "dist",
+    ".git",
+    "coverage"
+  ],
+  "framework": {
+    "name": "next.js",
+    "config": "next.config.js"
+  },
+  "structure": {
+    "app": {
+      "layout.tsx": "Root layout component",
+      "page.tsx": "Homepage component",
+      "loading.tsx": "Loading UI component",
+      "error.tsx": "Error boundary component",
+      "not-found.tsx": "404 page component",
+      "collections": {
+        "[slug]": {
+          "page.tsx": "Dynamic collection page",
+          "loading.tsx": "Collection loading UI"
+        },
+        "page.tsx": "Collections overview"
+      },
+      "product": {
+        "[id]": {
+          "page.tsx": "Dynamic product page",
+          "loading.tsx": "Product loading UI"
+        }
+      },
+      "about": {
+        "page.tsx": "About page component"
+      },
+      "contact": {
+        "page.tsx": "Contact page component"
+      }
+    },
+    "components": {
+      "ui": {
+        "buttons": {
+          "primary-button.tsx": "Primary button component",
+          "secondary-button.tsx": "Secondary button component"
+        },
+        "cards": {
+          "product-card.tsx": "Product card component",
+          "collection-card.tsx": "Collection card component"
+        },
+        "forms": {
+          "newsletter-form.tsx": "Newsletter signup form",
+          "contact-form.tsx": "Contact form component"
+        }
+      },
+      "layout": {
+        "header": {
+          "navbar.tsx": "Navigation component",
+          "search-bar.tsx": "Search bar component"
+        },
+        "footer": {
+          "index.tsx": "Footer component"
+        }
+      },
+      "sections": {
+        "hero": {
+          "hero-section.tsx": "Hero section component"
+        },
+        "featured": {
+          "index.tsx": "Featured products section"
+        },
+        "collections": {
+          "index.tsx": "Collections grid component"
+        },
+        "testimonials": {
+          "index.tsx": "Testimonials section"
+        },
+        "newsletter": {
+          "index.tsx": "Newsletter section component"
+        }
+      }
+    },
+    "lib": {
+      "utils": {
+        "price-formatter.ts": "Price formatting utilities",
+        "image-loader.ts": "Image loading utilities"
+      },
+      "constants": {
+        "routes.ts": "Route definitions",
+        "collections.ts": "Collection data"
+      },
+      "helpers": {
+        "index.ts": "Helper functions"
+      },
+      "validators": {
+        "index.ts": "Form validation schemas"
+      }
+    },
+    "hooks": {
+      "useCart": {
+        "index.ts": "Cart management hook",
+        "types.ts": "Cart type definitions"
+      },
+      "useProduct": {
+        "index.ts": "Product management hook"
+      },
+      "useAuth": {
+        "index.ts": "Authentication hook"
+      },
+      "useCollection": {
+        "index.ts": "Collection management hook"
+      }
+    },
+    "types": {
+      "product.ts": "Product type definitions",
+      "collection.ts": "Collection type definitions",
+      "user.ts": "User type definitions",
+      "common.ts": "Shared type definitions"
+    },
+    "public": {
+      "images": {
+        "products": "Product images directory",
+        "banners": "Banner images directory",
+        "icons": "UI icons directory"
+      },
+      "fonts": "Custom fonts directory",
+      "favicons": "Favicon files directory"
+    },
+    "styles": {
+      "globals.css": "Global styles",
+      "tailwind": {
+        "components.css": "Component styles",
+        "utilities.css": "Utility styles"
+      }
+    },
+    "config": {
+      "site.ts": "Site configuration",
+      "menu.ts": "Navigation configuration",
+      "api.ts": "API configuration"
+    },
+    "services": {
+      "api": {
+        "products.ts": "Product API service",
+        "collections.ts": "Collections API service"
+      },
+      "auth": {
+        "index.ts": "Authentication service"
+      },
+      "analytics": {
+        "index.ts": "Analytics integration"
+      }
+    }
+  },
+  "dependencies": {
+    "frontend": [
+      "next",
+      "react",
+      "react-dom",
+      "typescript",
+      "tailwindcss",
+      "framer-motion",
+      "@types/react",
+      "@types/node"
+    ],
+    "backend": [
+      "scuba",
+      "postgresql",
+      "redis",
+      "jsonwebtoken"
+    ],
+    "development": [
+      "eslint",
+      "prettier",
+      "jest",
+      "cypress"
+    ]
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "e2e": "cypress run"
+  },
+  "env": {
+    "development": {
+      "API_URL": "http://localhost:3000/api",
+      "DATABASE_URL": "postgresql://localhost:5432/eglanto",
+      "REDIS_URL": "redis://localhost:6379"
+    },
+    "production": {
+      "API_URL": "https://api.eglanto.com",
+      "DATABASE_URL": "postgresql://production:5432/eglanto",
+      "REDIS_URL": "redis://production:6379"
+    }
+  }
+}

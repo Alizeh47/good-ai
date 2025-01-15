@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #1A2B3B;
+  }
+
+  html {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-text-primary bg-background;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  h1 {
+    @apply text-h1 font-medium;
+  }
+
+  h2 {
+    @apply text-h2 font-medium;
+  }
+
+  h3 {
+    @apply text-h3 font-medium;
+  }
+
+  p {
+    @apply text-body;
+  }
+
+  small {
+    @apply text-small;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4 md:px-6 max-w-7xl;
+  }
+
+  .grid-container {
+    @apply grid grid-cols-12 gap-default;
+  }
+
+  .section {
+    @apply py-10 md:py-20;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

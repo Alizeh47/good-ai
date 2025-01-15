@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import Header from '../components/layout/header';
 import Footer from '../components/layout/footer';
+import { StoreProvider } from '../components/providers/store-provider';
 import './globals.css';
 
 const inter = Inter({ 
@@ -27,11 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow pt-20">
-          {children}
-        </main>
-        <Footer />
+        <StoreProvider>
+          <Header />
+          <main className="flex-grow pt-20">
+            {children}
+          </main>
+          <Footer />
+        </StoreProvider>
       </body>
     </html>
   );

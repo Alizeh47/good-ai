@@ -1,127 +1,120 @@
-import { useState } from 'react'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Heart, Eye, ShoppingBag } from 'lucide-react'
-import { twMerge } from 'tailwind-merge'
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Heart, ShoppingBag, Plus } from 'lucide-react';
+import { cn } from '../../../lib/utils';
 
 interface ProductCardProps {
-  id: string
-  name: string
-  price: number
-  image: string
-  category: string
-  isNew?: boolean
-  onQuickView?: () => void
-  onAddToCart?: () => void
-  onToggleWishlist?: () => void
-  isWishlisted?: boolean
-  className?: string
+  product: {
+    id: string | number;
+    name: string;
+    price: number;
+    image: string;
+    category: string;
+    slug: string;
+  };
+  onAddToCart?: () => void;
 }
 
-export default function ProductCard({
-  id,
-  name,
-  price,
-  image,
-  category,
-  isNew = false,
-  onQuickView,
-  onAddToCart,
-  onToggleWishlist,
-  isWishlisted = false,
-  className,
-}: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
+const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onAddToCart?.();
+  };
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLiked(!isLiked);
+    // TODO: Implement wishlist functionality
+  };
 
   return (
     <motion.div
-      className={twMerge(
-        'group relative overflow-hidden bg-white',
-        className
-      )}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="group relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      {/* Image container */}
-      <div className="relative aspect-[3/4] overflow-hidden">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-        />
-        
-        {/* Overlay actions */}
-        <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10">
-          <motion.div 
-            className="absolute right-4 top-4 flex flex-col gap-2"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : 20 }}
+      <Link href={`/product/${product.slug}`}>
+        <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className={cn(
+              "object-cover transition-transform duration-500",
+              isHovered && "scale-110"
+            )}
+          />
+          
+          {/* Quick Add Button */}
+          <motion.button
+            className="absolute bottom-4 right-4 p-3 bg-dark-teal text-white rounded-full
+                     shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleAddToCart}
+            whileHover={{ scale: 1.1 }}
+            aria-label="Quick add to cart"
           >
-            <button
-              onClick={onToggleWishlist}
-              className="rounded-full bg-white p-2 shadow-md transition-colors hover:bg-primary hover:text-white"
-            >
-              <Heart
-                className={twMerge(
-                  'h-5 w-5',
-                  isWishlisted ? 'fill-red-500 stroke-red-500' : ''
-                )}
-              />
-            </button>
-            <button
-              onClick={onQuickView}
-              className="rounded-full bg-white p-2 shadow-md transition-colors hover:bg-primary hover:text-white"
-            >
-              <Eye className="h-5 w-5" />
-            </button>
-          </motion.div>
+            <Plus size={20} />
+          </motion.button>
 
-          <motion.div
-            className="absolute bottom-4 left-4 right-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
+          {/* Wishlist Button */}
+          <button
+            onClick={handleToggleWishlist}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm
+                     hover:bg-white transition-colors"
           >
-            <button
-              onClick={onAddToCart}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Add to Cart
-            </button>
-          </motion.div>
+            <Heart
+              size={20}
+              className={cn(
+                "transition-colors",
+                isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
+              )}
+            />
+          </button>
+
+          {/* Category Tag */}
+          <div className="absolute top-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-sm
+                        rounded-full text-xs font-medium text-gray-700">
+            {product.category}
+          </div>
         </div>
 
-        {/* New badge */}
-        {isNew && (
-          <div className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-medium text-white">
-            New
-          </div>
-        )}
-      </div>
+        <div className="mt-4 space-y-1">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-dark-teal
+                       transition-colors">
+            {product.name}
+          </h3>
+          <p className="text-lg font-semibold text-gold">
+            ${product.price.toLocaleString()}
+          </p>
+        </div>
+      </Link>
 
-      {/* Product info */}
-      <div className="p-4">
-        <p className="text-xs font-medium uppercase tracking-wider text-text-secondary">
-          {category}
-        </p>
-        <h3 className="mt-1 font-serif text-lg font-medium text-text-primary">
-          {name}
-        </h3>
-        <motion.p 
-          className="mt-1 text-lg font-medium text-primary"
-          initial={false}
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 0.3 }}
-          key={price}
+      {/* Quick Add Indicator */}
+      <div className={cn(
+        "absolute inset-0 bg-white/10 backdrop-blur-[2px] flex items-center justify-center",
+        "opacity-0 transition-opacity pointer-events-none",
+        isHovered && "opacity-100"
+      )}>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white p-4 rounded-full shadow-lg"
         >
-          ${price.toLocaleString()}
-        </motion.p>
+          <ShoppingBag size={24} className="text-dark-teal" />
+        </motion.div>
       </div>
     </motion.div>
-  )
-} 
+  );
+};
+
+export default ProductCard; 

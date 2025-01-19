@@ -2,15 +2,18 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com'], // Add your image domains
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      }
+    ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/webp'],
   },
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react'],
-    optimizeServerReact: true,
+    optimizePackageImports: ['lucide-react']
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -66,4 +69,13 @@ const nextConfig = {
       },
     ]
   },
-} 
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.ignoreWarnings = [
+      { module: /node_modules\/node-fetch\/lib\/index\.js/ },
+      { module: /node_modules\/punycode\/punycode\.js/ },
+    ];
+    return config;
+  },
+}
+
+module.exports = nextConfig

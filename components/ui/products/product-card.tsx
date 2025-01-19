@@ -1,117 +1,154 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, ShoppingBag, Plus } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useAnalytics } from '../common/analytics';
 
-interface ProductCardProps {
-  product: {
-    id: string | number;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    slug: string;
-  };
-  onAddToCart?: () => void;
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  description: string;
 }
 
-const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+interface ProductCardProps {
+  product: Product;
+  viewMode: 'grid' | 'list';
+}
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onAddToCart?.();
+const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
+  const { trackEvent } = useAnalytics();
+  const [isWishlisted, setIsWishlisted] = React.useState(false);
+
+  const handleAddToWishlist = () => {
+    setIsWishlisted(!isWishlisted);
+    trackEvent(isWishlisted ? 'remove_from_wishlist' : 'add_to_wishlist', {
+      product_id: product.id,
+      product_name: product.name,
+    });
   };
 
-  const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsLiked(!isLiked);
-    // TODO: Implement wishlist functionality
+  const handleAddToCart = () => {
+    trackEvent('add_to_cart', {
+      product_id: product.id,
+      product_name: product.name,
+      price: product.price,
+    });
   };
+
+  if (viewMode === 'list') {
+    return (
+      <motion.div
+        whileHover={{ y: -4 }}
+        className="bg-white rounded-2xl p-4 shadow-sm flex gap-6"
+      >
+        {/* Image */}
+        <Link href={`/product/${product.id}`} className="relative w-48 h-48">
+          <div className="relative w-full h-full rounded-xl overflow-hidden bg-warm-cream">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-300 hover:scale-110"
+            />
+          </div>
+          <span className="absolute top-2 left-2 px-2 py-1 bg-white/80 backdrop-blur-sm text-xs rounded-full">
+            {product.category}
+          </span>
+        </Link>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col">
+          <div className="flex-1">
+            <Link href={`/product/${product.id}`}>
+              <h3 className="text-lg font-medium hover:text-teal-600 transition-colors">
+                {product.name}
+              </h3>
+            </Link>
+            <p className="mt-2 text-gray-600 line-clamp-3">{product.description}</p>
+            <p className="mt-2 text-xl font-medium">${product.price.toFixed(2)}</p>
+          </div>
+
+          <div className="mt-4 flex items-center gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center gap-2 bg-teal-600 text-white px-6 py-2 rounded-full hover:bg-teal-700 transition-colors"
+            >
+              <ShoppingBag size={20} />
+              <span>Add to Cart</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleAddToWishlist}
+              className={`w-10 h-10 flex items-center justify-center rounded-full ${
+                isWishlisted ? 'bg-red-50 text-red-500' : 'bg-gray-100 text-gray-600'
+              }`}
+            >
+              <Heart className={isWishlisted ? 'fill-current' : ''} size={20} />
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
-      className="group relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      whileHover={{ y: -4 }}
+      className="bg-white rounded-2xl p-4 shadow-sm"
     >
-      <Link href={`/product/${product.slug}`}>
-        <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
+      {/* Image */}
+      <Link href={`/product/${product.id}`} className="block relative">
+        <div className="relative aspect-square rounded-xl overflow-hidden bg-warm-cream">
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className={cn(
-              "object-cover transition-transform duration-500",
-              isHovered && "scale-110"
-            )}
+            className="object-cover transition-transform duration-300 hover:scale-110"
           />
-          
-          {/* Quick Add Button */}
-          <motion.button
-            className="absolute bottom-4 right-4 p-3 bg-dark-teal text-white rounded-full
-                     shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={handleAddToCart}
-            whileHover={{ scale: 1.1 }}
-            aria-label="Quick add to cart"
-          >
-            <Plus size={20} />
-          </motion.button>
-
-          {/* Wishlist Button */}
-          <button
-            onClick={handleToggleWishlist}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm
-                     hover:bg-white transition-colors"
-          >
-            <Heart
-              size={20}
-              className={cn(
-                "transition-colors",
-                isLiked ? "fill-red-500 text-red-500" : "text-gray-600"
-              )}
-            />
-          </button>
-
-          {/* Category Tag */}
-          <div className="absolute top-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-sm
-                        rounded-full text-xs font-medium text-gray-700">
-            {product.category}
-          </div>
         </div>
-
-        <div className="mt-4 space-y-1">
-          <h3 className="text-lg font-medium text-gray-900 group-hover:text-dark-teal
-                       transition-colors">
-            {product.name}
-          </h3>
-          <p className="text-lg font-semibold text-gold">
-            ${product.price.toLocaleString()}
-          </p>
-        </div>
+        <span className="absolute top-2 left-2 px-2 py-1 bg-white/80 backdrop-blur-sm text-xs rounded-full">
+          {product.category}
+        </span>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleAddToWishlist}
+          className={`absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full ${
+            isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/80 backdrop-blur-sm text-gray-600'
+          }`}
+        >
+          <Heart className={isWishlisted ? 'fill-current' : ''} size={16} />
+        </motion.button>
       </Link>
 
-      {/* Quick Add Indicator */}
-      <div className={cn(
-        "absolute inset-0 bg-white/10 backdrop-blur-[2px] flex items-center justify-center",
-        "opacity-0 transition-opacity pointer-events-none",
-        isHovered && "opacity-100"
-      )}>
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white p-4 rounded-full shadow-lg"
-        >
-          <ShoppingBag size={24} className="text-dark-teal" />
-        </motion.div>
+      {/* Content */}
+      <div className="mt-4">
+        <Link href={`/product/${product.id}`}>
+          <h3 className="font-medium hover:text-teal-600 transition-colors">
+            {product.name}
+          </h3>
+        </Link>
+        <p className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
+        <div className="mt-2 flex items-center justify-between">
+          <p className="text-lg font-medium">${product.price.toFixed(2)}</p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleAddToCart}
+            className="w-10 h-10 flex items-center justify-center bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors"
+          >
+            <ShoppingBag size={18} />
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

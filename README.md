@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eglanto Jewelry E-commerce
+
+A modern jewelry e-commerce website built with Next.js, TypeScript, and Tailwind CSS.
+
+## Features
+
+- 🛍️ Product catalog with search and filtering
+- 🛒 Shopping cart with persistent storage
+- 💝 Wishlist functionality
+- 🔐 User authentication
+- 📱 Responsive design
+- 🎨 Modern UI with animations
+- 📊 Analytics tracking
+- 🔍 SEO optimized
+- 🧪 Comprehensive testing
+
+## Tech Stack
+
+- **Framework:** Next.js 14 with App Router
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **State Management:** Zustand
+- **Data Fetching:** React Query
+- **Authentication:** NextAuth.js
+- **Forms:** React Hook Form + Zod
+- **Testing:** Jest + React Testing Library
+- **Analytics:** Google Analytics
+- **UI Components:** Radix UI
+- **Animations:** Framer Motion
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/eglanto-jewelry.git
+   cd eglanto-jewelry
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Fill in the required environment variables.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm run type-check` - Run TypeScript type checking
+- `npm run validate` - Run all checks (lint, type-check, test)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Testing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+We use Jest and React Testing Library for testing. Tests are located in the `tests` directory.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Make your changes and commit using conventional commits:
+   ```bash
+   git commit -m "feat: add new feature"
+   ```
+
+3. Push to your branch and create a pull request
+
+## License
+
+This project is licensed under the MIT License.

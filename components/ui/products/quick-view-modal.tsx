@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, Heart, ShoppingBag } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Heart, ShoppingBag, Minus, Plus } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
 interface QuickViewModalProps {
@@ -45,59 +45,68 @@ export default function QuickViewModal({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="relative max-h-[90vh] w-full max-w-4xl overflow-auto rounded-lg bg-white p-6"
-            initial={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-auto rounded-2xl bg-white p-8"
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
+            exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button
+            <motion.button
               onClick={onClose}
-              className="absolute right-4 top-4 rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200"
+              whileHover={{ scale: 1.1 }}
+              className="absolute right-6 top-6 p-2 rounded-full bg-white shadow-lg
+                       hover:bg-dark-teal hover:text-white transition-colors z-10"
             >
-              <X className="h-5 w-5" />
-            </button>
+              <X className="w-5 h-5" />
+            </motion.button>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2">
               {/* Product Gallery */}
-              <div className="relative aspect-square">
+              <div className="relative aspect-square rounded-xl overflow-hidden bg-warm-cream">
                 <Image
                   src={product.images[currentImageIndex]}
                   alt={product.name}
                   fill
                   className="object-cover"
                   sizes="(min-width: 768px) 50vw, 100vw"
+                  priority
                 />
                 
-                <button
+                <motion.button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white p-2 shadow-md transition-transform hover:scale-110"
+                  whileHover={{ scale: 1.1 }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full
+                           bg-white shadow-lg hover:bg-dark-teal hover:text-white
+                           transition-colors"
                 >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
+                  <ChevronLeft className="w-5 h-5" />
+                </motion.button>
                 
-                <button
+                <motion.button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white p-2 shadow-md transition-transform hover:scale-110"
+                  whileHover={{ scale: 1.1 }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full
+                           bg-white shadow-lg hover:bg-dark-teal hover:text-white
+                           transition-colors"
                 >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
+                  <ChevronRight className="w-5 h-5" />
+                </motion.button>
 
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                   {product.images.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
                       className={twMerge(
-                        'h-2 w-2 rounded-full bg-white/50 transition-colors',
-                        index === currentImageIndex && 'bg-white'
+                        'w-2.5 h-2.5 rounded-full bg-white/50 transition-colors shadow-lg',
+                        index === currentImageIndex && 'bg-white scale-125'
                       )}
                     />
                   ))}
@@ -106,56 +115,70 @@ export default function QuickViewModal({
 
               {/* Product Info */}
               <div className="flex flex-col">
-                <p className="text-sm font-medium uppercase tracking-wider text-text-secondary">
+                <div className="px-4 py-1.5 bg-warm-cream text-dark-teal rounded-full
+                             w-fit text-xs font-medium tracking-wide uppercase">
                   {product.category}
-                </p>
-                <h2 className="mt-2 font-serif text-2xl font-medium text-text-primary">
+                </div>
+
+                <h2 className="mt-4 font-serif text-3xl text-dark-teal">
                   {product.name}
                 </h2>
-                <p className="mt-2 text-2xl font-medium text-primary">
+
+                <p className="mt-2 text-2xl font-medium text-gold">
                   ${product.price.toLocaleString()}
                 </p>
-                <p className="mt-4 text-text-secondary">
+
+                <p className="mt-6 text-gray-600 leading-relaxed">
                   {product.description}
                 </p>
 
-                <div className="mt-6 flex items-center gap-4">
-                  <div className="flex items-center rounded-md border">
-                    <button
+                <div className="mt-8 flex items-center gap-4">
+                  <div className="flex items-center rounded-full border border-gray-200
+                               overflow-hidden bg-white">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
                       onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                      className="px-3 py-2 text-text-secondary transition-colors hover:text-text-primary"
+                      className="p-3 text-dark-teal hover:bg-warm-cream transition-colors"
                     >
-                      -
-                    </button>
-                    <span className="w-12 text-center">{quantity}</span>
-                    <button
+                      <Minus className="w-4 h-4" />
+                    </motion.button>
+                    <span className="w-12 text-center font-medium">
+                      {quantity}
+                    </span>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
                       onClick={() => setQuantity((prev) => prev + 1)}
-                      className="px-3 py-2 text-text-secondary transition-colors hover:text-text-primary"
+                      className="p-3 text-dark-teal hover:bg-warm-cream transition-colors"
                     >
-                      +
-                    </button>
+                      <Plus className="w-4 h-4" />
+                    </motion.button>
                   </div>
 
-                  <button
+                  <motion.button
                     onClick={onToggleWishlist}
-                    className="rounded-md border p-2 transition-colors hover:bg-gray-50"
+                    whileHover={{ scale: 1.1 }}
+                    className="p-3 rounded-full border border-gray-200 bg-white
+                             hover:bg-warm-cream transition-colors"
                   >
                     <Heart
                       className={twMerge(
-                        'h-6 w-6',
-                        isWishlisted ? 'fill-red-500 stroke-red-500' : ''
+                        'w-5 h-5',
+                        isWishlisted ? 'fill-red-500 stroke-red-500' : 'text-dark-teal'
                       )}
                     />
-                  </button>
+                  </motion.button>
                 </div>
 
-                <button
+                <motion.button
                   onClick={onAddToCart}
-                  className="mt-6 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary/90"
+                  whileHover={{ scale: 1.02 }}
+                  className="mt-8 flex items-center justify-center gap-2 rounded-full
+                           bg-dark-teal text-white px-8 py-4 font-medium
+                           hover:bg-dark-teal/90 transition-colors"
                 >
-                  <ShoppingBag className="h-5 w-5" />
+                  <ShoppingBag className="w-5 h-5" />
                   Add to Cart
-                </button>
+                </motion.button>
               </div>
             </div>
           </motion.div>

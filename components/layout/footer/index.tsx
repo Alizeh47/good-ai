@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { Instagram, Facebook, Twitter } from 'lucide-react'
+import { Instagram, Facebook, Twitter, MapPin, Phone, Mail } from 'lucide-react'
 import NewsletterForm from '../../ui/forms/newsletter-form'
 
 const navigation = {
@@ -40,31 +39,48 @@ const socialLinks = [
   },
 ]
 
+const contactInfo = [
+  {
+    icon: MapPin,
+    text: '123 Jewelry Lane, Luxury District, NY 10001',
+  },
+  {
+    icon: Phone,
+    text: '+1 (555) 123-4567',
+  },
+  {
+    icon: Mail,
+    text: 'contact@eglanto.com',
+  },
+]
+
 export default function Footer() {
   return (
-    <footer className="bg-white">
-      <div className="container mx-auto px-4 pb-12 pt-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+    <footer className="bg-dark-teal text-white">
+      <div className="container mx-auto px-6 pb-12 pt-20">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Brand column */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-block">
-              <Image
-                src="/images/logo.svg"
-                alt="Eglanto Jewelry"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
-              />
+              <h2 className="text-3xl font-serif tracking-wide">Eglanto</h2>
             </Link>
-            <p className="mt-4 max-w-md text-small text-text-secondary">
+            <p className="mt-6 text-base text-gray-300 leading-relaxed max-w-md">
               Discover our exquisite collection of handcrafted jewelry, where timeless elegance meets contemporary design.
             </p>
-            <div className="mt-6 flex space-x-6">
+            <div className="mt-8 space-y-4">
+              {contactInfo.map((item, index) => (
+                <div key={index} className="flex items-center space-x-3 text-gray-300">
+                  <item.icon size={20} className="text-gold" />
+                  <span className="text-sm">{item.text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex space-x-6">
               {socialLinks.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-text-secondary hover:text-primary"
+                  className="text-gray-300 hover:text-gold transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -78,13 +94,13 @@ export default function Footer() {
           {/* Navigation columns */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-4 lg:ml-auto">
             <div>
-              <h3 className="text-small font-medium text-text-primary">Shop</h3>
-              <ul className="mt-4 space-y-3">
+              <h3 className="text-lg font-serif mb-6">Shop</h3>
+              <ul className="space-y-4">
                 {navigation.shop.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-small text-text-secondary hover:text-primary"
+                      className="text-gray-300 hover:text-gold transition-colors text-sm"
                     >
                       {item.name}
                     </Link>
@@ -93,13 +109,13 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-small font-medium text-text-primary">Support</h3>
-              <ul className="mt-4 space-y-3">
+              <h3 className="text-lg font-serif mb-6">Support</h3>
+              <ul className="space-y-4">
                 {navigation.support.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-small text-text-secondary hover:text-primary"
+                      className="text-gray-300 hover:text-gold transition-colors text-sm"
                     >
                       {item.name}
                     </Link>
@@ -108,13 +124,13 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-small font-medium text-text-primary">Legal</h3>
-              <ul className="mt-4 space-y-3">
+              <h3 className="text-lg font-serif mb-6">Legal</h3>
+              <ul className="space-y-4">
                 {navigation.legal.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-small text-text-secondary hover:text-primary"
+                      className="text-gray-300 hover:text-gold transition-colors text-sm"
                     >
                       {item.name}
                     </Link>
@@ -126,21 +142,24 @@ export default function Footer() {
 
           {/* Newsletter column */}
           <div className="lg:col-span-4">
-            <h3 className="text-small font-medium text-text-primary">
+            <h3 className="text-lg font-serif mb-4">
               Subscribe to our newsletter
             </h3>
-            <p className="mt-4 text-small text-text-secondary">
+            <p className="text-sm text-gray-300 mb-6">
               Stay updated with our latest collections, styling tips, and exclusive offers.
             </p>
-            <div className="mt-6">
+            <div className="bg-white/5 p-6 rounded-lg backdrop-blur-sm">
               <NewsletterForm />
+              <p className="mt-4 text-xs text-gray-400">
+                By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+              </p>
             </div>
           </div>
         </div>
 
         {/* Bottom section */}
-        <div className="mt-12 border-t border-text-secondary/10 pt-8">
-          <p className="text-center text-small text-text-secondary">
+        <div className="mt-16 pt-8 border-t border-white/10">
+          <p className="text-center text-sm text-gray-400">
             © {new Date().getFullYear()} Eglanto Jewelry. All rights reserved.
           </p>
         </div>

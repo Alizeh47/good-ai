@@ -31,12 +31,13 @@ const product = {
 
 const relatedProducts = [
   {
-    id: 2,
+    id: '2',
     name: 'Pearl Drop Necklace',
     price: 899,
     image: '/images/products/necklace-1.jpg',
     category: 'Necklaces',
     slug: 'pearl-drop-necklace',
+    description: 'Elegant pearl necklace with delicate drop design'
   },
   // Add more related products...
 ];
@@ -181,7 +182,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {relatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} viewMode="grid" />
             ))}
           </div>
         </div>

@@ -1,178 +1,247 @@
-import { useEffect, useRef } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Search, X, Clock, Loader2 } from 'lucide-react'
-import { twMerge } from 'tailwind-merge'
-import { useSearch } from '../../../contexts/search-context'
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, X, Filter, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { cn } from '../../../lib/utils';
 
 interface SearchModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
+interface SearchResult {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+}
+
+const categories = [
+  'All',
+  'Rings',
+  'Necklaces',
+  'Earrings',
+  'Bracelets',
+  'Watches',
+];
+
+const priceRanges = [
+  { label: 'Under $100', value: '0-100' },
+  { label: '$100 - $500', value: '100-500' },
+  { label: '$500 - $1000', value: '500-1000' },
+  { label: 'Over $1000', value: '1000-' },
+];
+
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
-  const {
-    query,
-    setQuery,
-    results,
-    recentSearches,
-    suggestions,
-    isLoading,
-    clearRecentSearches,
-  } = useSearch()
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-
+  // Mock search function - replace with actual API call
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-      inputRef.current?.focus()
+    if (query.length > 2) {
+      // Simulate API call delay
+      const timer = setTimeout(() => {
+        // Mock results
+        const mockResults: SearchResult[] = [
+          {
+            id: '1',
+            name: 'Diamond Ring',
+            price: 999,
+            image: '/images/products/ring-1.jpg',
+            category: 'Rings',
+          },
+          // Add more mock results
+        ];
+        setResults(mockResults);
+
+        // Mock suggestions
+        setSuggestions([
+          `${query} in rings`,
+          `${query} necklace`,
+          `${query} collection`,
+        ]);
+      }, 300);
+
+      return () => clearTimeout(timer);
     } else {
-      document.body.style.overflow = 'unset'
-      setQuery('')
+      setResults([]);
+      setSuggestions([]);
     }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, setQuery])
+  }, [query, selectedCategory, selectedPriceRange]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
+        <motion.div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
           <motion.div
-            className="fixed inset-0 z-50 bg-black/50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
-
-          {/* Modal */}
-          <motion.div
-            className="fixed left-0 right-0 top-0 z-50 h-full max-h-[85vh] overflow-hidden bg-white shadow-xl sm:left-1/2 sm:top-8 sm:h-auto sm:max-h-[600px] sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:rounded-lg"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-x-0 top-0 z-50 bg-white"
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Search Input */}
-            <div className="flex items-center gap-3 border-b px-4 py-3">
-              <Search className="h-5 w-5 text-gray-400" />
-              <input
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search for products..."
-                className="flex-1 bg-transparent text-lg outline-none placeholder:text-gray-400"
-              />
-              {isLoading && <Loader2 className="h-5 w-5 animate-spin text-gray-400" />}
-              <button
-                onClick={onClose}
-                className="rounded-full p-1 transition-colors hover:bg-gray-100"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="h-full overflow-auto">
-              {/* Recent Searches */}
-              {!query && recentSearches.length > 0 && (
-                <div className="p-4">
-                  <div className="mb-3 flex items-center justify-between">
-                    <h3 className="font-medium">Recent Searches</h3>
-                    <button
-                      onClick={clearRecentSearches}
-                      className="text-sm text-primary transition-colors hover:text-primary/80"
-                    >
-                      Clear All
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    {recentSearches.map((search) => (
-                      <button
-                        key={search}
-                        onClick={() => setQuery(search)}
-                        className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 transition-colors hover:bg-gray-100"
-                      >
-                        <Clock className="h-4 w-4 text-gray-400" />
-                        <span>{search}</span>
-                      </button>
-                    ))}
-                  </div>
+            <div className="container mx-auto px-4 py-6">
+              {/* Search Input */}
+              <div className="relative flex items-center gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for jewelry..."
+                    className="w-full h-12 pl-12 pr-4 rounded-full border border-gray-200
+                             text-dark-teal placeholder:text-gray-400
+                             focus:outline-none focus:border-dark-teal focus:ring-1 focus:ring-dark-teal"
+                    autoFocus
+                  />
                 </div>
-              )}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full
+                           bg-warm-cream text-dark-teal hover:bg-dark-teal hover:text-white
+                           transition-colors"
+                >
+                  <Filter size={18} />
+                  <span className="font-medium">Filters</span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  onClick={onClose}
+                  className="p-2 rounded-full hover:bg-warm-cream text-dark-teal transition-colors"
+                >
+                  <X size={24} />
+                </motion.button>
+              </div>
 
-              {/* Suggestions */}
-              {query && suggestions.length > 0 && !results.length && (
-                <div className="p-4">
-                  <h3 className="mb-3 font-medium">Suggestions</h3>
+              {/* Filters */}
+              <AnimatePresence>
+                {isFiltersOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-6 p-6 bg-warm-cream rounded-2xl">
+                      <div className="grid gap-8 md:grid-cols-2">
+                        {/* Categories */}
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-700 mb-4">Categories</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {categories.map((category) => (
+                              <button
+                                key={category}
+                                onClick={() => setSelectedCategory(category)}
+                                className={cn(
+                                  "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+                                  selectedCategory === category
+                                    ? "bg-dark-teal text-white"
+                                    : "bg-white text-dark-teal hover:bg-dark-teal hover:text-white"
+                                )}
+                              >
+                                {category}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Price Ranges */}
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-700 mb-4">Price Range</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {priceRanges.map((range) => (
+                              <button
+                                key={range.value}
+                                onClick={() => setSelectedPriceRange(range.value)}
+                                className={cn(
+                                  "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+                                  selectedPriceRange === range.value
+                                    ? "bg-dark-teal text-white"
+                                    : "bg-white text-dark-teal hover:bg-dark-teal hover:text-white"
+                                )}
+                              >
+                                {range.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Search Suggestions */}
+              {suggestions.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions</h3>
                   <div className="space-y-2">
-                    {suggestions.map((suggestion) => (
+                    {suggestions.map((suggestion, index) => (
                       <button
-                        key={suggestion}
+                        key={index}
                         onClick={() => setQuery(suggestion)}
-                        className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 transition-colors hover:bg-gray-100"
+                        className="w-full text-left px-4 py-2 rounded-lg text-dark-teal
+                                 hover:bg-warm-cream transition-colors"
                       >
-                        <Search className="h-4 w-4 text-gray-400" />
-                        <span>{suggestion}</span>
+                        {suggestion}
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Results */}
+              {/* Search Results */}
               {results.length > 0 && (
-                <div className="p-4">
-                  <h3 className="mb-3 font-medium">Products</h3>
-                  <div className="divide-y">
-                    {results.map((product) => (
+                <div className="mt-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-serif text-dark-teal">Search Results</h3>
+                    <span className="text-sm text-gray-500">{results.length} items found</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                    {results.map((result) => (
                       <Link
-                        key={product.id}
-                        href={`/products/${product.id}`}
+                        key={result.id}
+                        href={`/product/${result.id}`}
                         onClick={onClose}
-                        className="flex gap-4 py-4 transition-colors hover:bg-gray-50"
+                        className="group"
                       >
-                        <div className="relative aspect-square h-16 overflow-hidden rounded-md">
+                        <div className="aspect-square relative overflow-hidden rounded-xl bg-warm-cream">
                           <Image
-                            src={product.image}
-                            alt={product.name}
+                            src={result.image}
+                            alt={result.name}
                             fill
-                            className="object-cover"
+                            className="object-cover transition-transform duration-300 group-hover:scale-110"
                           />
                         </div>
-                        <div>
-                          <h4 className="font-medium">{product.name}</h4>
-                          <p className="text-sm text-gray-500">{product.category}</p>
-                          <p className="mt-1 font-medium text-primary">
-                            ${product.price.toLocaleString()}
-                          </p>
+                        <div className="mt-4">
+                          <h4 className="text-dark-teal font-medium group-hover:text-gold transition-colors">
+                            {result.name}
+                          </h4>
+                          <p className="text-gray-600">${result.price.toLocaleString()}</p>
                         </div>
                       </Link>
                     ))}
                   </div>
                 </div>
               )}
-
-              {/* No Results */}
-              {query && !isLoading && !results.length && !suggestions.length && (
-                <div className="flex flex-col items-center justify-center p-8">
-                  <Search className="h-12 w-12 text-gray-300" />
-                  <p className="mt-4 text-lg font-medium">No results found</p>
-                  <p className="mt-2 text-center text-sm text-gray-500">
-                    We couldn't find any products matching your search.
-                    <br />
-                    Try using different keywords.
-                  </p>
-                </div>
-              )}
             </div>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 } 

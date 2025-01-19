@@ -1,132 +1,123 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  getImageDimensions,
-  generateBlurDataUrl,
-  getResponsiveImageProps,
-  getOptimalImageFormat,
-  preloadImage,
-} from '../../lib/utils/image-optimization';
+import { cn } from '@/lib/utils';
 
-interface OptimizedImageProps {
+interface OptimizedImageProps extends React.ComponentPropsWithoutRef<typeof Image> {
   src: string;
   alt: string;
   className?: string;
   priority?: boolean;
-  withBlur?: boolean;
-  blurDataUrl?: string;
-  aspectRatio?: number;
-  sizes?: string;
-  onLoad?: () => void;
+  quality?: number;
 }
 
-export default function OptimizedImage({
+export function OptimizedImage({
   src,
   alt,
-  className = '',
+  className,
   priority = false,
-  withBlur = true,
-  blurDataUrl,
-  aspectRatio,
-  sizes,
-  onLoad,
+  quality = 85,
+  ...props
 }: OptimizedImageProps) {
-  const [loading, setLoading] = useState(true);
-  const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
-  const [format, setFormat] = useState<'webp' | 'jpeg'>('webp');
-  const [generatedBlurDataUrl, setGeneratedBlurDataUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function initialize() {
-      try {
-        // Get optimal image format based on browser support
-        const optimalFormat = await getOptimalImageFormat();
-        setFormat(optimalFormat);
-
-        // Get image dimensions if not provided through aspect ratio
-        if (!aspectRatio) {
-          const dims = await getImageDimensions(src);
-          setDimensions(dims);
-        }
-
-        // Generate blur data URL if needed and not provided
-        if (withBlur && !blurDataUrl) {
-          const dataUrl = await generateBlurDataUrl(src);
-          setGeneratedBlurDataUrl(dataUrl);
-        }
-
-        // Preload image if priority is true
-        if (priority) {
-          preloadImage(src, { format });
-        }
-      } catch (error) {
-        console.error('Error initializing image:', error);
-      }
-    }
-
-    initialize();
-  }, [src, aspectRatio, withBlur, blurDataUrl, priority, format]);
-
-  const imageProps = getResponsiveImageProps(src, { format });
-
-  const handleLoad = () => {
-    setLoading(false);
-    onLoad?.();
-  };
-
-  const containerStyle = {
-    position: 'relative' as const,
-    width: '100%',
-    height: aspectRatio ? 0 : 'auto',
-    paddingBottom: aspectRatio ? `${100 / aspectRatio}%` : undefined,
-    overflow: 'hidden' as const,
-  };
-
   return (
-    <div style={containerStyle} className={className}>
-      <AnimatePresence>
-        {loading && (withBlur || blurDataUrl) && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundImage: `url(${blurDataUrl || generatedBlurDataUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(20px)',
-            }}
-          />
-        )}
-      </AnimatePresence>
-
+    <div className={cn('relative overflow-hidden', className)}>
       <Image
-        {...imageProps}
+        src={src}
         alt={alt}
-        sizes={sizes || imageProps.sizes}
-        width={dimensions?.width || 1920}
-        height={dimensions?.height || (aspectRatio ? 1920 / aspectRatio : 1080)}
-        onLoad={handleLoad}
+        quality={quality}
         priority={priority}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: loading ? 0 : 1,
-          transition: 'opacity 0.3s ease-in-out',
-        }}
+        {...props}
       />
     </div>
+  );
+}
+
+export function ProductImage({
+  src,
+  alt,
+  className,
+  priority = false,
+}: Omit<OptimizedImageProps, 'width' | 'height' | 'quality'>) {
+  return (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      width={1200}
+      height={1200}
+      className={className}
+      priority={priority}
+    />
+  );
+}
+
+export function HeroImage({
+  src,
+  alt,
+  className,
+  priority = true,
+}: Omit<OptimizedImageProps, 'width' | 'height' | 'quality'>) {
+  return (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      width={1920}
+      height={1080}
+      className={cn('aspect-[16/9]', className)}
+      priority={priority}
+    />
+  );
+}
+
+export function CollectionBanner({
+  src,
+  alt,
+  className,
+  priority = false,
+}: Omit<OptimizedImageProps, 'width' | 'height' | 'quality'>) {
+  return (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      width={1920}
+      height={600}
+      className={cn('aspect-[3.2/1]', className)}
+      priority={priority}
+    />
+  );
+}
+
+export function TeamPhoto({
+  src,
+  alt,
+  className,
+  priority = false,
+}: Omit<OptimizedImageProps, 'width' | 'height' | 'quality'>) {
+  return (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      width={800}
+      height={800}
+      className={cn('aspect-square rounded-full', className)}
+      priority={priority}
+    />
+  );
+}
+
+export function InstagramPost({
+  src,
+  alt,
+  className,
+  priority = false,
+}: Omit<OptimizedImageProps, 'width' | 'height' | 'quality'>) {
+  return (
+    <OptimizedImage
+      src={src}
+      alt={alt}
+      width={1080}
+      height={1080}
+      className={cn('aspect-square', className)}
+      priority={priority}
+    />
   );
 } 

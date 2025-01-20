@@ -18,7 +18,7 @@ const Footer = () => {
             <Link href="/" className="inline-block">
               <h2 className="text-2xl font-serif">Eglanto</h2>
             </Link>
-            <p className="text-gray-300">
+            <p className="text-black-300">
               Crafting timeless elegance since 1970. Each piece tells a unique story of luxury and tradition.
             </p>
             <div className="flex space-x-4">
@@ -27,7 +27,7 @@ const Footer = () => {
                 className="hover:text-gold transition-colors"
                 aria-label="Facebook"
               >
-                <Facebook size={20} />
+                <Facebook size={30} />
               </a>
               <a
                 href="#"
@@ -48,21 +48,26 @@ const Footer = () => {
 
           {/* About Column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">About</h3>
+            <h3 className="text-lg font-serif font-semibold mb-4">Explore</h3>
             <ul className="space-y-2">
+              <li>
+                <Link href="/discover" className="text-gray-300 hover:text-gold transition-colors">
+                  Discover
+                </Link>
+              </li>
+              <li>
+                <Link href="/blogs" className="text-gray-300 hover:text-gold transition-colors">
+                  Jewelry Journal
+                </Link>
+              </li>
               <li>
                 <Link href="/about" className="text-gray-300 hover:text-gold transition-colors">
                   Our Story
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-gray-300 hover:text-gold transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/stores" className="text-gray-300 hover:text-gold transition-colors">
-                  Store Locator
+                <Link href="/contact" className="text-gray-300 hover:text-gold transition-colors">
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -70,7 +75,7 @@ const Footer = () => {
 
           {/* Support Column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <h3 className="text-lg font-serif font-semibold mb-4">Help</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/faq" className="text-gray-300 hover:text-gold transition-colors">
@@ -83,8 +88,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-gold transition-colors">
-                  Contact Us
+                <Link href="/size-guide" className="text-gray-300 hover:text-gold transition-colors">
+                  Size Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/care-guide" className="text-gray-300 hover:text-gold transition-colors">
+                  Care Guide
                 </Link>
               </li>
             </ul>
@@ -93,7 +103,7 @@ const Footer = () => {
           {/* Newsletter Column */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
-            <p className="text-gray-300 mb-4">
+            <p className="text-black-300 mb-4">
               Subscribe to receive updates, access to exclusive deals, and more.
             </p>
             <form onSubmit={handleNewsletterSubmit} className="space-y-4">
@@ -116,14 +126,14 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-300 text-sm">
+            <p className="text-black-300 text-sm">
               © {new Date().getFullYear()} Eglanto. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
-              <Link href="/privacy" className="text-gray-300 hover:text-gold transition-colors">
+              <Link href="/privacy" className="text-black-300 hover:text-gold transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-gray-300 hover:text-gold transition-colors">
+              <Link href="/terms" className="text-black-300 hover:text-gold transition-colors">
                 Terms of Service
               </Link>
             </div>

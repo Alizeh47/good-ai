@@ -1,10 +1,13 @@
 import { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import { RootProvider } from '@/providers/root-provider';
 import { cn } from '@/lib/utils';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -13,27 +16,27 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Your Brand Name',
-    template: '%s | Your Brand Name',
+    default: 'Eglanto | Luxury Jewelry',
+    template: '%s | Eglanto',
   },
-  description: 'Your brand description',
-  keywords: ['jewelry', 'luxury', 'accessories', 'fashion'],
-  authors: [{ name: 'Your Brand Name' }],
-  creator: 'Your Brand Name',
+  description: 'Discover our curated collection of luxury jewelry. From elegant rings to stunning necklaces, find the perfect piece to express your style.',
+  keywords: ['jewelry', 'luxury', 'accessories', 'fashion', 'rings', 'necklaces', 'earrings'],
+  authors: [{ name: 'Eglanto' }],
+  creator: 'Eglanto',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL,
-    title: 'Your Brand Name',
-    description: 'Your brand description',
-    siteName: 'Your Brand Name',
+    title: 'Eglanto | Luxury Jewelry',
+    description: 'Discover our curated collection of luxury jewelry. From elegant rings to stunning necklaces, find the perfect piece to express your style.',
+    siteName: 'Eglanto',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Your Brand Name',
-    description: 'Your brand description',
-    creator: '@yourbrand',
+    title: 'Eglanto | Luxury Jewelry',
+    description: 'Discover our curated collection of luxury jewelry.',
+    creator: '@eglanto',
   },
   robots: {
     index: true,
@@ -56,10 +59,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn('min-h-screen bg-background antialiased', inter.className)}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+      <body className={cn('min-h-screen bg-background antialiased font-sans')}>
         <RootProvider>
+          <Header />
           {children}
+          <Footer />
         </RootProvider>
       </body>
     </html>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const HeroSection = () => {
@@ -60,9 +61,12 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <button className="px-8 py-3 bg-dark-teal text-white rounded-full hover:bg-opacity-90 transition-colors">
+          <Link 
+            href="/collections" 
+            className="px-8 py-3 bg-dark-teal text-white rounded-full hover:bg-opacity-90 transition-colors"
+          >
             See All
-          </button>
+          </Link>
           <button className="px-8 py-3 border-2 border-dark-teal rounded-full hover:bg-dark-teal hover:text-white transition-colors">
             Play Video
           </button>

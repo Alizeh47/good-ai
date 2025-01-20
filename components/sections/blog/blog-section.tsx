@@ -116,7 +116,7 @@ export default function BlogSection({ posts }: BlogSectionProps) {
         {/* View All Link */}
         <div className="text-center mt-12">
           <Link
-            href="/blog"
+            href="/blogs"
             className="inline-flex items-center gap-2 text-dark-teal hover:text-gold transition-colors font-medium"
           >
             View All Articles

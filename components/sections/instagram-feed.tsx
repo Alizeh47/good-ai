@@ -55,7 +55,7 @@ const InstagramPost = ({ post }: { post: typeof instagramPosts[0] }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="group relative aspect-square"
+      className="group relative aspect-square rounded-lg overflow-hidden shadow-lg"
     >
       <Link href={post.link} target="_blank" rel="noopener noreferrer">
         <Image
@@ -64,15 +64,15 @@ const InstagramPost = ({ post }: { post: typeof instagramPosts[0] }) => {
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-dark-teal/0 group-hover:bg-dark-teal/70
+        <div className="absolute inset-0 bg-dark-teal/0 group-hover:bg-dark-teal/80
                      flex items-center justify-center opacity-0 group-hover:opacity-100
-                     transition-all duration-300">
-          <div className="text-white text-center">
-            <div className="flex items-center gap-2 mb-2">
-              <span>❤️ {post.likes}</span>
-              <span>💬 {post.comments}</span>
+                     transition-all duration-300 backdrop-blur-sm">
+          <div className="text-white text-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
+            <div className="flex items-center gap-4 mb-3">
+              <span className="flex items-center gap-1 text-lg">❤️ {post.likes}</span>
+              <span className="flex items-center gap-1 text-lg">💬 {post.comments}</span>
             </div>
-            <Instagram size={24} className="mx-auto" />
+            <Instagram size={28} className="mx-auto text-gold" />
           </div>
         </div>
       </Link>
@@ -82,24 +82,24 @@ const InstagramPost = ({ post }: { post: typeof instagramPosts[0] }) => {
 
 const InstagramFeed = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-24 bg-warm-cream">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-serif mb-4">
-            Follow Us on Instagram
+          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-dark-teal tracking-wide">
+            Follow Our Journey
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-700 max-w-2xl mx-auto text-lg font-light leading-relaxed">
             Join our community and discover the latest collections, behind-the-scenes moments,
-            and styling inspiration.
+            and styling inspiration on Instagram.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 px-4">
           {instagramPosts.map((post, index) => (
             <motion.div
               key={post.id}
@@ -114,7 +114,7 @@ const InstagramFeed = () => {
         </div>
 
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-16"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
         >
@@ -122,10 +122,11 @@ const InstagramFeed = () => {
             href="https://instagram.com/eglanto"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-dark-teal text-white
-                     rounded-full hover:bg-opacity-90 transition-colors"
+            className="inline-flex items-center gap-3 px-10 py-4 bg-dark-teal text-white
+                     rounded-full hover:bg-opacity-90 transition-colors shadow-lg
+                     text-lg font-medium tracking-wide hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
           >
-            <Instagram size={20} />
+            <Instagram size={24} className="text-gold" />
             Follow @eglanto
           </Link>
         </motion.div>

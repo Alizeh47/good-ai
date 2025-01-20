@@ -88,38 +88,47 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
+      {/* Hero Section - Main banner */}
       <Suspense fallback={<HeroSkeleton />}>
         <HeroSection />
       </Suspense>
 
+      {/* Stats Bar - Shows numbers and achievements */}
       <Suspense fallback={<SectionSkeleton />}>
         <StatsBar />
       </Suspense>
 
+      {/* Collection Showcase - Featured collections */}
       <Suspense fallback={<SectionSkeleton />}>
         <CollectionShowcase />
       </Suspense>
 
+      {/* New Arrivals - Latest products */}
       <Suspense fallback={<SectionSkeleton />}>
         <NewArrivals />
       </Suspense>
 
-      <Suspense fallback={<SectionSkeleton />}>
-        <Testimonials />
-      </Suspense>
-
+      {/* Heritage Section - Brand story */}
       <Suspense fallback={<SectionSkeleton />}>
         <Heritage />
       </Suspense>
 
+      {/* Testimonials - Customer reviews */}
+      <Suspense fallback={<SectionSkeleton />}>
+        <Testimonials />
+      </Suspense>
+
+      {/* Blog Preview Section */}
       <Suspense fallback={<SectionSkeleton />}>
         <BlogSection posts={blogPosts} />
       </Suspense>
 
+      {/* Newsletter Signup */}
       <Suspense fallback={<SectionSkeleton />}>
         <NewsletterSection />
       </Suspense>
 
+      {/* Instagram Feed */}
       <Suspense fallback={<SectionSkeleton />}>
         <InstagramFeed />
       </Suspense>

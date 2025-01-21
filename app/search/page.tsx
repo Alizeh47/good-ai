@@ -1,17 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Heart, ShoppingBag } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { Product } from '@/store/useStore'
-
-export const metadata: Metadata = {
-  title: 'Search Products | Luxury Jewelry Store',
-  description: 'Search through our extensive collection of fine jewelry, including rings, necklaces, earrings, and bracelets.',
-};
 
 // Mock product data - in a real app, this would come from an API or database
 const products: Product[] = [
